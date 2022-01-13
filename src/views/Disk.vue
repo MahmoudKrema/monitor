@@ -3,9 +3,9 @@
     <p>Disk</p>
     <h3 v-if="disksNames.length === 0">Loading...</h3>
      <ul v-else>
-      <li>the {{ diskInfo.numberOfDisks }} disks are:
+      <li>The {{ diskInfo.numberOfDisks }} disks are:
         <ul>
-           <li v-for="(disk, index) in disksNames" :key="disk">info of disk {{ disk }} :
+           <li v-for="(disk, index) in disksNames" :key="disk">info of disk {{ disk }} 
              <ul>
                <li>disk total size: {{ totalDisksSizes[index] }} GB</li>
                <li>disk used size: {{ usedDisksSizes[index] }} GB</li>
