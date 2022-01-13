@@ -1,4 +1,4 @@
-# device-monitor-4
+# device-monitor
 
 ## Project setup
 ```
