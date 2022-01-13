@@ -7,9 +7,7 @@
 
       <li>Memory usage by RSS: {{ memoryInfo.rss / 1000000 }} MB</li>
 
-      <li>
-        Memory usage by heapTotal: {{ memoryInfo.heapTotal / 1000000 }} MB
-      </li>
+      <li>Memory usage by heapTotal: {{ memoryInfo.heapTotal / 1000000 }} MB</li>
 
       <li>Memory usage by heapUsed: {{ memoryInfo.heapUsed / 1000000 }} MB</li>
 

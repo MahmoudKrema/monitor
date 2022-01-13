@@ -1,28 +1,23 @@
 <template>
   <div class="cpu">
     <p>CPU</p>
-    <br>
+    <br />
     <ul>
-      <li>CPU Model: {{data.cpuModel}}</li>
+      <li>CPU Model: {{ data.cpuModel }}</li>
 
       <li>CPU usage as a percentage: {{ usage }}%</li>
-
-    </ul>  
+    </ul>
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-
 export default {
   name: "Cpu",
   data: () => ({
     usage: 0,
   }),
-  components: {
-
-  },
-    props: {
+  components: {},
+  props: {
     data: {
       type: Object,
       default: () => ({}),
@@ -31,7 +26,6 @@ export default {
   mounted() {
     window.ipcRenderer.send("cpuToBack");
     window.ipcRenderer.receive("sendCpuUsage", (cpuUsage) => {
- 
       this.usage = Math.round(cpuUsage[0].cpu);
     });
   },

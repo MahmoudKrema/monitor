@@ -1,14 +1,14 @@
 "use strict";
+//better use import
 import { app, protocol, BrowserWindow, ipcMain } from "electron";
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
 import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer";
-// var process = require('process');
 var path = require("path");
 var os = require("os");
 var osUtils = require("os-utils");
 var nodeDiskInfo = require("node-disk-info");
 var fs = require("fs");
-var server = require('./socket');
+import io from "./socket.js";
 const isDevelopment = process.env.NODE_ENV !== "production";
 let win;
 let globalResult;
@@ -17,9 +17,7 @@ let theHeight = 600;
 let windowPosX = 0;
 let windowPosY = 0;
 
-// var initPath = path.join(app.getPath(), "init.json");
 
-// Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
   { scheme: "app", privileges: { secure: true, standard: true } },
 ]);
@@ -32,15 +30,9 @@ async function createWindow() {
     x: windowPosX,
     y: windowPosY,
     webPreferences: {
-      // Required for Spectron testing
-      // enableRemoteModule: !!process.env.IS_TEST,
-
-      // Use pluginOptions.nodeIntegration, leave this alone
-      // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
-      // nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
-      // contextIsolation: !process.env.ELECTRON_NODE_INTEGRATION,
+     
       nodeIntegration: false,
-      contextIsolation: true, // protects against prototype pollution
+      contextIsolation: true, 
       enableRemoteModule: true,
       preload: path.join(__dirname, "../src/preload.js"),
     },
@@ -102,8 +94,7 @@ if (isDevelopment) {
   }
 }
 
-// CPU - Display information about CPU
-// the current usage as a percentage
+
 
 //basic device information:
 let homeData = {
@@ -120,13 +111,9 @@ ipcMain.on("nameOfClientChannel", (event) => {
   win.webContents.send("nameOfElectronChannel", homeData);
 });
 
-//CPU
-// CPU model
-// speed (in MHz)
-//CPU Usage
-
 //CPU Usage
 var cpuStats = require("cpu-stats");
+
 // the first argument is how long to sample for in ms.
 // longer is more accurate but, you know, longer.
 // if omitted, defaults to one second.
@@ -138,16 +125,11 @@ function usageOfcpu() {
   });
 }
 ipcMain.on("cpuToBack", (event) => {
-  // console.log(globalResult); //this is how to take the result and send it with the (homeData) object
   usageOfcpu();
 });
 
 //Memory Usage
 
-//Display information about memory
-// the current usage as a percentage
-
-// console.log("total memory:", os.totalmem());
 let memoryData;
 let memoryInfo;
 let memoryUsage;
@@ -160,11 +142,15 @@ setInterval(() => {
     memoryUsage: memoryUsage,
   };
   win.webContents.send("sendMemoryUsage", memoryData);
+  //send data to server (socket.js)
+  io.emit("sending data", Math.round(memoryUsage));
 }, 1000);
+
+
 
 //Disk
 
-//without waiting make some error, that's why i need setTimeout
+//without waiting some errors appear, that's why i need setTimeout
 function getDiskData() {
   nodeDiskInfo
     .getDiskInfo()
@@ -243,22 +229,7 @@ app.on("quit", () => {
 });
 
 
-
-// const execSync = require('child_process').execSync;
-// // import { execSync } from 'child_process';  // replace ^ if using ES modules
-// let serverPath = path.join('src', 'socket');
-// console.log(serverPath);
-// serverPath = `node ${serverPath}`;
-// const output = execSync(serverPath, { encoding: 'utf-8' });  // the default is 'buffer'
-// console.log('Output was:\n', output);
-
-// console.log('./socket');
-
-
-
-let testData = 'test data'
-//send data to socket
-setTimeout(() => {
-  win.webContents.send("sendToSocket", testData);
-}, 1000);
+io.on("connection", (socket) => {
+  console.log("a user connected");
+});
 
