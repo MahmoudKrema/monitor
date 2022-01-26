@@ -1,6 +1,9 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
+import Disk from "../views/Disk.vue";
+import Cpu from "../views/Cpu.vue";
+import Memory from "../views/Memory.vue";
 
 Vue.use(VueRouter);
 
@@ -9,35 +12,41 @@ const routes = [
     path: "/",
     name: "Home",
     component: Home,
+    meta: {
+      title: "Home",
+    }
   },
   {
     path: "/disk",
     name: "Disk",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "desk" */ "../views/Disk.vue"),
+    component: Disk,
+    meta: {
+      title: "Disk",
+    }
   },
   {
     path: "/cpu",
     name: "Cpu",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "desk" */ "../views/Cpu.vue"),
+    component: Cpu,
+    meta: {
+      title: "CPU",
+    }
   },
 
   {
     path: "/memory",
     name: "Memory",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "desk" */ "../views/Memory.vue"),
+    component: Memory,
+    meta: {
+      title: "Memory",
+    }
   },
 ];
 
 const router = new VueRouter({
+  //the default is (mode: "hash")
+  //to understand the difference go to:
+  //https://www.youtube.com/watch?v=js5Sr_ZSHDs&list=PL4cUxeGkcC9gQcYgjhBoeQH7wiAyZNrYa&index=42
   mode: "history",
   base: process.env.BASE_URL,
   routes,

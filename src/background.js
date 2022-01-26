@@ -3,6 +3,13 @@
 import { app, protocol, BrowserWindow, ipcMain } from "electron";
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
 import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer";
+import getHomeData from "./homeData";
+import getCpuData from "./CpuData";
+import getMemoryData from "./memoryData";
+import getDisk from "./diskData";
+import windowReadData from "./windowReadData.js";
+import windowWriteData from "./windowData";
+
 var path = require("path");
 var os = require("os");
 var osUtils = require("os-utils");
@@ -17,7 +24,6 @@ let theHeight = 600;
 let windowPosX = 0;
 let windowPosY = 0;
 
-
 protocol.registerSchemesAsPrivileged([
   { scheme: "app", privileges: { secure: true, standard: true } },
 ]);
@@ -30,9 +36,8 @@ async function createWindow() {
     x: windowPosX,
     y: windowPosY,
     webPreferences: {
-     
       nodeIntegration: false,
-      contextIsolation: true, 
+      contextIsolation: true,
       enableRemoteModule: true,
       preload: path.join(__dirname, "../src/preload.js"),
     },
@@ -76,7 +81,40 @@ app.on("ready", async () => {
       console.error("Vue Devtools failed to install:", e.toString());
     }
   }
+
+  // const data = fs.readFileSync("./mynewfile1.json", {
+  //   encoding: "utf8",
+  //   flag: "r",
+  // });
+
+  // let jsonData = JSON.parse(data);
+
+  // theWidth = jsonData.width;
+  // theHeight = jsonData.height;
+  // windowPosX = jsonData.PosX;
+  // windowPosY = jsonData.PosY;
+  [theWidth, theHeight, windowPosX, windowPosY] = windowReadData(
+    fs,
+    theWidth,
+    theHeight,
+    windowPosX,
+    windowPosY
+  );
+
   createWindow();
+
+  getHomeData(win, os);
+
+  getCpuData(win, os);
+
+  // setInterval(() => {
+  //   getMemoryData(win, io);
+  // }, 1000);
+  getDisk(win, nodeDiskInfo);
+
+  getMemoryData(win, os, io);
+
+  windowWriteData(fs, win, app, theWidth, theHeight, windowPosX, windowPosY);
 });
 
 // Exit cleanly on request from parent process in development mode.
@@ -94,142 +132,71 @@ if (isDevelopment) {
   }
 }
 
+// setTimeout(() => {
+//   windowPresistData(fs, win, app, theWidth, theHeight, windowPosX, windowPosY);
+// }, 1000);
+// windowPresistData(fs, win, app, theWidth, theHeight, windowPosX, windowPosY);
 
+// //presist the window position and dimensions
+// const data = fs.readFileSync("./mynewfile1.json", {
+//   encoding: "utf8",
+//   flag: "r",
+// });
 
-//basic device information:
-let homeData = {
-  cpuModel: os.cpus()[0].model, // CPU model
-  mbTotal: os.totalmem() * 0.000000001, // total ram in GB
-  SystemName: os.type(), //operative system name
-  platformName: os.platform(), //operative system platform name
-  deviceName: os.hostname(), //computer name (desktop name)
-  username: os.userInfo().username, //username
-};
+// let jsonData = JSON.parse(data);
 
-//Home
-ipcMain.on("nameOfClientChannel", (event) => {
-  win.webContents.send("nameOfElectronChannel", homeData);
-});
+// theWidth = jsonData.width;
+// theHeight = jsonData.height;
+// windowPosX = jsonData.PosX;
+// windowPosY = jsonData.PosY;
 
-//CPU Usage
-var cpuStats = require("cpu-stats");
+// let currentHeigh;
+// let currentWidth;
+// let positionX;
+// let positionY;
+// let windowBounds;
+// let windowPosition;
+// setTimeout(() => {
+//   windowBounds = win.getSize();
+//   currentWidth = windowBounds[0];
+//   currentHeigh = windowBounds[1];
 
-// the first argument is how long to sample for in ms.
-// longer is more accurate but, you know, longer.
-// if omitted, defaults to one second.
-function usageOfcpu() {
-  cpuStats(2000, function (error, result) {
-    if (error) return console.error("Oh noes!", error);
-    win.webContents.send("sendCpuUsage", result);
-    globalResult = result;
-  });
-}
-ipcMain.on("cpuToBack", (event) => {
-  usageOfcpu();
-});
+//   windowPosition = win.getPosition();
+//   positionX = windowPosition[0];
+//   positionY = windowPosition[1];
 
-//Memory Usage
+//   win.on("resized", () => {
+//     console.log(win.getSize());
+//     windowBounds = win.getSize();
+//     currentWidth = windowBounds[0];
+//     currentHeigh = windowBounds[1];
+//   });
 
-let memoryData;
-let memoryInfo;
-let memoryUsage;
-let totalMemory = os.totalmem();
-setInterval(() => {
-  memoryInfo = process.memoryUsage();
-  memoryUsage = ((totalMemory - os.freemem()) / totalMemory) * 100;
-  memoryData = {
-    memoryInfo: memoryInfo,
-    memoryUsage: memoryUsage,
-  };
-  win.webContents.send("sendMemoryUsage", memoryData);
-  //send data to server (socket.js)
-  io.emit("sending data", Math.round(memoryUsage));
-}, 1000);
+//   win.on("moved", () => {
+//     console.log(win.getPosition());
+//     windowPosition = win.getPosition();
+//     positionX = windowPosition[0];
+//     positionY = windowPosition[1];
+//   });
+// }, 1000);
 
+// app.on("quit", () => {
+//   fs.writeFileSync(
+//     "mynewfile1.json",
+//     `{
+//     "width":${currentWidth.toString()},
+//     "height":${currentHeigh.toString()},
+//     "PosX": ${positionX.toString()},
+//     "PosY": ${positionY.toString()}
 
-
-//Disk
-
-//without waiting some errors appear, that's why i need setTimeout
-function getDiskData() {
-  nodeDiskInfo
-    .getDiskInfo()
-    .then((disks) => {
-      win.webContents.send("sendDiskInfo", disks);
-      // console.log(disks);
-    })
-    .catch((reason) => {
-      console.error(reason);
-    });
-}
-
-ipcMain.on("diskToBack", (event) => {
-  getDiskData();
-});
-
-//presist the window position and dimensions
-const data = fs.readFileSync("./mynewfile1.json", {
-  encoding: "utf8",
-  flag: "r",
-});
-
-let jsonData = JSON.parse(data);
-
-theWidth = jsonData.width;
-theHeight = jsonData.height;
-windowPosX = jsonData.PosX;
-windowPosY = jsonData.PosY;
-
-let currentHeigh;
-let currentWidth;
-let positionX;
-let positionY;
-let windowBounds;
-let windowPosition;
-setTimeout(() => {
-  windowBounds = win.getSize();
-  currentWidth = windowBounds[0];
-  currentHeigh = windowBounds[1];
-
-  windowPosition = win.getPosition();
-  positionX = windowPosition[0];
-  positionY = windowPosition[1];
-
-  win.on("resized", () => {
-    console.log(win.getSize());
-    windowBounds = win.getSize();
-    currentWidth = windowBounds[0];
-    currentHeigh = windowBounds[1];
-  });
-
-  win.on("moved", () => {
-    console.log(win.getPosition());
-    windowPosition = win.getPosition();
-    positionX = windowPosition[0];
-    positionY = windowPosition[1];
-  });
-}, 1000);
-
-app.on("quit", () => {
-  fs.writeFileSync(
-    "mynewfile1.json",
-    `{
-    "width":${currentWidth.toString()}, 
-    "height":${currentHeigh.toString()},
-    "PosX": ${positionX.toString()},
-    "PosY": ${positionY.toString()}
-
-
-  }`,
-    function (err) {
-      if (err) throw err;
-      console.log("Saved!");
-    }
-  );
-});
-
+//   }`,
+//     function (err) {
+//       if (err) throw err;
+//       console.log("Saved!");
+//     }
+//   );
+// });
 
 io.on("connection", (socket) => {
   console.log("a user connected");
 });
-
