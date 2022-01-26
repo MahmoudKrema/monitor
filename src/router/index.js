@@ -21,7 +21,7 @@ const routes = [
     name: "Disk",
     component: Disk,
     meta: {
-      title: "Disk",
+      title: "Diskkk",
     }
   },
   {
