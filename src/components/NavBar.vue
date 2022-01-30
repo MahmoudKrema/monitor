@@ -4,9 +4,9 @@
  
 
     <v-navigation-drawer
-      v-model="drawer"
-      absolute
-      temporary
+      app
+      dense  
+      clipped
     >
       <v-list
         nav
@@ -14,7 +14,7 @@
       >
         <v-list-item-group
           v-model="group"
-          active-class="deep-purple--text text--accent-4"
+          active-class="text--accent-4"
         >
           <v-list-item to="/" @click="changePageName($event)" name="Home">
             <v-list-item-icon>
@@ -50,14 +50,15 @@
 
   
      <v-app-bar
-      color="deep-purple"
       dark
+      app
+      clipped-left
     >
-      <v-app-bar-nav-icon @click="drawer = true"></v-app-bar-nav-icon>
+      
 
       <v-toolbar-title>PC Monitor</v-toolbar-title>
       <v-spacer></v-spacer>
-      <p>{{ this.$route.meta.title }}</p>
+      <v-toolbar-title>{{ this.$route.meta.title }}</v-toolbar-title>
     </v-app-bar>
 
 </nav>
@@ -67,7 +68,7 @@
 <script>
   export default {
     data: () => ({
-      drawer: false,
+      drawer: true,
       group: null,
     }),
 

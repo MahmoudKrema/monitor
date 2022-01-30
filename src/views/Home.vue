@@ -1,5 +1,5 @@
 <template>
-  <div class="home">
+  <!-- <div class="home">
     <ul>
       <li>CPU Model: {{ data.cpuModel }}</li>
 
@@ -13,6 +13,34 @@
 
       <li>Username: {{ data.username }}</li>
     </ul>
+  </div> -->
+  <div class="home">
+    <v-container class="lighten-5 title" v-for="(value, name) in data" :key="name">
+      <v-row no-gutters>
+        <v-col
+          cols="4"        
+        >
+          <v-card
+            class="pa-2"
+            tile
+          >
+            {{name}}
+          </v-card>
+        </v-col>
+        <v-col
+          cols="8"
+          
+        >
+          <v-card
+            class="pa-2"
+            tile
+          >
+            {{value}}
+          </v-card>
+        </v-col>
+      </v-row>
+      
+    </v-container>
   </div>
 </template>
 
@@ -20,6 +48,11 @@
 export default {
   name: "Home",
   components: {},
+
+  data: () => ({
+    
+  }),
+  
 
   props: {
     data: {

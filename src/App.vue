@@ -2,9 +2,19 @@
     <v-app>
       <nav-bar ></nav-bar>
 
-      <v-content>
-        <router-view :data="myData" />
-      </v-content>
+      <v-main>
+        <v-container fluid>
+          <router-view :data="myData" />
+        </v-container>
+        
+      </v-main>
+
+      <v-footer
+        app
+      >
+
+        footer
+      </v-footer>
  
     </v-app>
 

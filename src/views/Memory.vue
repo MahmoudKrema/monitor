@@ -1,5 +1,5 @@
 <template>
-  <div class="memory">
+  <!-- <div class="memory">
     <p>Memory</p>
     <h3 v-if="memoryUsage === 0">Loading...</h3>
     <ul v-else>
@@ -15,6 +15,61 @@
 
       <li>Memory usage by external: {{ memoryInfo.external / 1000000 }} MB</li>
     </ul>
+  </div> -->
+    <div class="memory">
+      <v-container class="lighten-5 title">
+      <v-row no-gutters>
+        <v-col
+          cols="4"        
+        >
+          <v-card
+            class="pa-2"
+            tile
+          >
+            Memory usage percentage:
+          </v-card>
+        </v-col>
+        <v-col
+          cols="8"
+          
+        >
+          <v-card
+            class="pa-2"
+            tile
+          >
+            {{ memoryUsage }} %
+          </v-card>
+        </v-col>
+      </v-row>
+      
+    </v-container>
+
+    <v-container class="lighten-5 title" v-for="(value, name) in memoryInfo" :key="name">
+      <v-row no-gutters>
+        <v-col
+          cols="4"        
+        >
+          <v-card
+            class="pa-2"
+            tile
+          >
+            {{name}}
+          </v-card>
+        </v-col>
+        <v-col
+          cols="8"
+          
+        >
+          <v-card
+            class="pa-2"
+            tile
+          >
+            {{value}}
+          </v-card>
+        </v-col>
+      </v-row>
+      
+    </v-container>
   </div>
 </template>
 

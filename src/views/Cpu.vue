@@ -1,5 +1,5 @@
 <template>
-  <div class="cpu">
+  <!-- <div class="cpu">
     <p>CPU</p>
     <br />
     <ul>
@@ -7,7 +7,65 @@
 
       <li>CPU usage as a percentage: {{ usage }}%</li>
     </ul>
+  </div> -->
+  <div class="cpu">
+    <v-container class="lighten-5 title">
+    <v-row no-gutters>
+      <v-col
+        cols="4"        
+      >
+        <v-card
+          class="pa-2"   
+          tile
+        >
+          CPU Model:
+        </v-card>
+      </v-col>
+      <v-col
+        cols="8"
+        
+      >
+        <v-card
+          class="pa-2"
+          tile
+        >
+          {{data.cpuModel}}
+        </v-card>
+      </v-col>
+    </v-row>
+    
+    </v-container>
+
+    <v-container class="lighten-5 title">
+    <v-row no-gutters>
+      <v-col
+        cols="4"        
+      >
+        <v-card
+          class="pa-2"
+          tile
+        >
+         CPU usage as a percentage:
+        </v-card>
+      </v-col>
+      <v-col
+        cols="8"
+        
+      >
+        <v-card
+          class="pa-2"
+          tile
+        >
+          {{ usage }}%
+        </v-card>
+      </v-col>
+    </v-row>
+    
+    </v-container>
+
   </div>
+  
+  
 </template>
 
 <script>
