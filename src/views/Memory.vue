@@ -76,6 +76,11 @@
 <script>
 // @ is an alias to /src
 
+//(export default) uses 
+//1- is for exporting the component and imort it in another component 
+// (for example we imorted it in ) router (index.js)
+
+//2- something related to accessing data
 export default {
   name: "Memory",
   data: () => ({

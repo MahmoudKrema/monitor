@@ -4,7 +4,14 @@
 
       <v-main>
         <v-container fluid>
+          <!-- (:) is short hand for (v-bind) 
+          and (v-bind) job is to make ("myData") dynamic and not just a string
+          ro understand try to remove the bind
+          
+          -->
           <router-view :data="myData" />
+          <p>App</p>
+
         </v-container>
         
       </v-main>
@@ -24,10 +31,22 @@
 
 <script>
 import NavBar from './components/NavBar.vue';
+//(export default) uses 
+//1- is for exporting the component and imort it in another component 
+// (for example we imorted it in ) main.js
 
+//2- something related to accessing data like (myData)
 
 export default {
-  components: { NavBar },
+  //register comonents in the root component (App.vue)
+  components: { 
+    NavBar 
+  },
+  //another way to register a component
+  // components: { 
+  //   'myNavbar': NavBar 
+  // },
+  //there is also a way to register a component globally, search when you need it
   name: "App",
 
   data: () => ({
@@ -53,6 +72,11 @@ export default {
 };
 </script>
 
-<style>
-
+<style scoped>
+  /*
+  to test scoped styling:
+   p
+  {
+    color: red;
+  } */
 </style>

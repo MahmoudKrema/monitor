@@ -12,3 +12,5 @@ new Vue({
   vuetify,
   render: (h) => h(App),
 }).$mount("#app");
+//above we rendered root app component (App) to this app id (#app)
+//(#app) is in public/index.html in the <div id="app"></div> element

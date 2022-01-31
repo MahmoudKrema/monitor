@@ -45,6 +45,11 @@
 </template>
 
 <script>
+//(export default) uses 
+//1- is for exporting the component and imort it in another component 
+// (for example we imorted it in ) router (index.js)
+
+//2- something related to accessing data
 export default {
   name: "Home",
   components: {},
