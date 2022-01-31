@@ -2,11 +2,15 @@
 <nav>
  
  
-
+<!-- permanent to stay opened all the time -->
+<!-- clipped so it won't overlap with     </v-app-bar> -->
     <v-navigation-drawer
       app
       dense  
       clipped
+      permanent
+      v-model="drawer"
+      
     >
       <v-list
         nav
@@ -53,6 +57,7 @@
       dark
       app
       clipped-left
+      
     >
       
 
