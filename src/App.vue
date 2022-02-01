@@ -9,7 +9,10 @@
           ro understand try to remove the bind
           
           -->
-          <router-view :data="myData" />
+          <keep-alive>
+            <router-view :data="myData" />
+          </keep-alive>
+          
           <p>App</p>
 
         </v-container>
